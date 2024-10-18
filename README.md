@@ -7,53 +7,82 @@ To implement the AES (Advanced Encryption Standard) encryption and decryption al
 ## Procedure:
 
 1.	Introduction to AES:
+   
     AES is a symmetric key encryption standard, meaning the same key is used for both encryption and decryption.
     It operates on fixed-size blocks of data (128-bit block size) and supports key sizes of 128, 192, or 256 bits.
     This implementation focuses on AES-128, which uses a 128-bit key and performs 10 rounds of encryption.
   	
 3.	Steps for Encryption:
+   
     Step 1: Define the key and plaintext.
+  	
         Select a 128-bit key (16 bytes) and a 128-bit block of plaintext data for encryption.
-    Step 2: Initialize the key schedule.
+
+  	Step 2: Initialize the key schedule.
+  	
         The AES key expansion algorithm generates round keys from the initial key. Each round key is used for one round of encryption.
-    Step 3: Add the initial round key.
+
+  	Step 3: Add the initial round key.
+  	
         XOR the first round key with the plaintext to initialize the encryption process.
-    Step 4: Perform 9 rounds of AES transformations:
+
+  	Step 4: Perform 9 rounds of AES transformations:
+  	
         SubBytes: Each byte in the block is replaced by its corresponding value from the S-box (Substitution Box).
         ShiftRows: The rows of the block are cyclically shifted by a certain number of bytes.
         MixColumns: The columns of the block are mixed to produce new values (except for the last round).
         AddRoundKey: The current round key is XORed with the block.
-    Step 5: Final round (10th round):
+
+  	Step 5: Final round (10th round):
+  	
         Perform SubBytes, ShiftRows, and AddRoundKey transformations (MixColumns is skipped in this round).
-    Step 6: The resulting output is the encrypted ciphertext.
+
+  	Step 6: The resulting output is the encrypted ciphertext.
   	
 5.	Steps for Decryption:
-    Step 1: Initialize the key schedule with the same 128-bit key used for encryption.
+
+  	Step 1: Initialize the key schedule with the same 128-bit key used for encryption.
+
     Step 2: Add the final round key to the ciphertext to begin the decryption process.
-    Step 3: Perform the inverse AES transformations for 9 rounds:
+
+  	Step 3: Perform the inverse AES transformations for 9 rounds:
+  	
         InvShiftRows: Perform the inverse row shifting.
         InvSubBytes: Replace each byte using the inverse S-box.
         InvMixColumns: Mix the columns in reverse order.
         AddRoundKey: XOR the block with the corresponding round key.
-   Step 4: Final round (10th round):
+
+  	Step 4: Final round (10th round):
+  	
         Perform InvShiftRows, InvSubBytes, and AddRoundKey (InvMixColumns is skipped).
-    Step 5: The resulting output is the decrypted plaintext.
+
+  	Step 5: The resulting output is the decrypted plaintext.
   	
 7.	Key Components:
-    AES Key Expansion: This step generates round keys from the initial AES key, using the AES key schedule process.
-    SubBytes: Byte substitution using the S-box for non-linearity.
-    ShiftRows: Cyclically shifts the rows to mix data across columns.
-    MixColumns: Mixes the bytes within each column for diffusion.
-    AddRoundKey: Adds (XORs) the round key with the state.
+
+  	AES Key Expansion: This step generates round keys from the initial AES key, using the AES key schedule process.
+
+  	SubBytes: Byte substitution using the S-box for non-linearity.
+
+  	ShiftRows: Cyclically shifts the rows to mix data across columns.
+
+  	MixColumns: Mixes the bytes within each column for diffusion.
+
+  	AddRoundKey: Adds (XORs) the round key with the state.
   	
 9.	Implementation:
-    Write a C program that implements these AES transformations.
-    Use arrays to store the key, round keys, plaintext, and ciphertext.
-    Ensure that both encryption and decryption functions are implemented.
+
+  	Write a C program that implements these AES transformations.
+
+  	Use arrays to store the key, round keys, plaintext, and ciphertext.
+
+  	Ensure that both encryption and decryption functions are implemented.
   	
-10.	Testing:
-    Test the program by encrypting a known plaintext using the AES-128 key and then decrypting the resulting ciphertext back to the original plaintext.
-    Print both the encrypted and decrypted values to verify correctness.
+11.	Testing:
+
+   	Test the program by encrypting a known plaintext using the AES-128 key and then decrypting the resulting ciphertext back to the original plaintext.
+
+   	Print both the encrypted and decrypted values to verify correctness.
 
 ## Program:
 
@@ -148,6 +177,7 @@ int main() {
     return 0;
 }
 ```
+
 ## OUTPUT:
  ![image](https://github.com/user-attachments/assets/944e2167-4ee0-4c8b-b0a1-cf418f4f861f)
 
