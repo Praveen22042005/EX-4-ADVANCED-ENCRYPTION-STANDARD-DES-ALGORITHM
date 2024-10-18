@@ -7,22 +7,31 @@ The aim of the RSA Encryption Algorithm is to securely transmit information over
 ## Algorithm
 
  Step 1: Choose two distinct large prime numbers ppp and qqq.
+
  Step 2: Compute n=p×qn = p \times qn=p×q. nnn will be used as part of the public and private keys.
+
  Step 3: Calculate ϕ(n)=(p−1)×(q−1)\phi(n) = (p-1) \times (q-1)ϕ(n)=(p−1)×(q−1), where ϕ\phiϕ is Euler's Totient function.
+
  Step 4: Choose an integer eee such that 1<e<ϕ(n)1 < e < \phi(n)1<e<ϕ(n) and gcd⁡(e,ϕ(n))=1\gcd(e, \phi(n)) = 1gcd(e,ϕ(n))=1. eee is the public exponent.
+
  Step 5: Compute ddd as the modular multiplicative inverse of emod ϕ(n)e \mod \phi(n)emodϕ(n), such that e×d≡1mod ϕ(n)e \times d \equiv 1 \mod \phi(n)e×d≡1modϕ(n). ddd is the private exponent.
+
  Step 6: The public key is (e,n)(e, n)(e,n), and the private key is (d,n)(d, n)(d,n).
 
 ## Encryption
 
  Step 1: To encrypt a message MMM, convert it into an integer mmm, where m<nm < nm<n.
+
  Step 2: Compute the ciphertext C=memod nC = m^e \mod nC=memodn.
+
  Step 3: The encrypted message is CCC.
 
 ## Decryption:
 
  Step 1: To decrypt the ciphertext CCC, use the private key ddd.
+
  Step 2: Compute m=Cdmod nm = C^d \mod nm=Cdmodn, which gives the original message mmm.
+
  Step 3: Convert mmm back to the original message MMM.
 
 ## PROGRAM:
@@ -104,6 +113,9 @@ decryptedMessage = power(encryptedMessage, d, n);
 printf("Decrypted message: %lld\n", decryptedMessage);
 return 0;
 }
-OUTPUT:
-RESULT:
+
+## OUTPUT:
+![Crypto-9 1](https://github.com/user-attachments/assets/1147b2a3-a3f3-402c-ab78-7339e0bc184e)
+
+## RESULT:
 Thus the program to execute RSA Algorithm is executed successfully.
