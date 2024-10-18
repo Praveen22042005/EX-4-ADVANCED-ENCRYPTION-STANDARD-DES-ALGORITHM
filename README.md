@@ -36,83 +36,102 @@ The aim of the RSA Encryption Algorithm is to securely transmit information over
 
 ## PROGRAM:
 
+```
 #include <stdio.h>
 #include <math.h>
+
 long long gcd(long long a, long long b) {
-while (b != 0) {
-long long temp = b;
-b = a % b;
-a = temp;
+    while (b != 0) {
+        long long temp = b;
+        b = a % b;
+        a = temp;
+    }
+    return a;
 }
-return a;
-}
+
 long long modInverse(long long a, long long m) {
-a = a % m;
-for (long long x = 1; x < m; x++) {
-if ((a * x) % m == 1) {
-return x;
+    a = a % m;
+    for (long long x = 1; x < m; x++) {
+        if ((a * x) % m == 1) {
+            return x;
+        }
+    }
+    return 1;
 }
-}
-return 1;
-}
+
 long long power(long long base, long long exp, long long mod) {
-long long result = 1;
-base = base % mod;
-while (exp > 0) {
-if (exp % 2 == 1) {
-result = (result * base) % mod;
+    long long result = 1;
+    base = base % mod;
+    while (exp > 0) {
+        if (exp % 2 == 1) {
+            result = (result * base) % mod;
+        }
+        exp = exp >> 1;
+        base = (base * base) % mod;
+    }
+    return result;
 }
-exp = exp >> 1;
-base = (base * base) % mod;
-}
-return result;
-}
+
 int isPrime(long long n) {
-if (n <= 1) return 0;
-for (long long i = 2; i <= sqrt(n); i++) {
-if (n % i == 0) return 0;
+    if (n <= 1) return 0;
+    for (long long i = 2; i <= sqrt(n); i++) {
+        if (n % i == 0) return 0;
+    }
+    return 1;
 }
-return 1;
-}
+
 int main() {
-long long p, q, n, phi, e, d, message, encryptedMessage, decryptedMessage;
-// Choose two prime numbers
-printf("Enter prime number p: ");
-scanf("%lld", &p);
-while (!isPrime(p)) {
-printf("p is not a prime number. Enter a prime number: ");
-scanf("%lld", &p);
+    long long p, q, n, phi, e, d, message, encryptedMessage, decryptedMessage;
+
+    // Choose two prime numbers
+    
+    printf("Enter prime number p: ");
+    scanf("%lld", &p);
+    while (!isPrime(p)) {
+        printf("p is not a prime number. Enter a prime number: ");
+        scanf("%lld", &p);
+    }
+
+    printf("Enter prime number q: ");
+    scanf("%lld", &q);
+    while (!isPrime(q)) {
+        printf("q is not a prime number. Enter a prime number: ");
+        scanf("%lld", &q);
+    }
+
+    // Calculate n = p * q
+    n = p * q;
+
+    // Calculate phi(n) = (p-1)*(q-1)
+    phi = (p - 1) * (q - 1);
+
+    // Choose e such that 1 < e < phi(n) and gcd(e, phi(n)) = 1
+    printf("Enter public key exponent e (1 < e < %lld and gcd(e, %lld) = 1): ", phi, phi);
+    scanf("%lld", &e);
+    while (gcd(e, phi) != 1) {
+        printf("Invalid e. Enter a valid public key exponent: ");
+        scanf("%lld", &e);
+    }
+
+    // Calculate the private key d such that (d * e) % phi = 1
+    d = modInverse(e, phi);
+
+    // Enter the message
+    printf("Enter the message to encrypt (as an integer): ");
+    scanf("%lld", &message);
+
+    // Encrypt the message
+    encryptedMessage = power(message, e, n);
+    printf("Encrypted message: %lld\n", encryptedMessage);
+
+    // Decrypt the message
+    decryptedMessage = power(encryptedMessage, d, n);
+    printf("Decrypted message: %lld\n", decryptedMessage);
+
+    return 0;
 }
-printf("Enter prime number q: ");
-scanf("%lld", &q);
-while (!isPrime(q)) {
-printf("q is not a prime number. Enter a prime number: ");
-scanf("%lld", &q);
-}
-// Calculate n = p * q
-n = p * q;
-// Calculate phi(n) = (p-1)*(q-1)
-phi = (p - 1) * (q - 1);
-// Choose e such that 1 < e < phi(n) and gcd(e, phi(n)) = 1
-printf("Enter public key exponent e (1 < e < %lld and gcd(e, %lld) = 1): ", phi, phi);
-scanf("%lld", &e);
-while (gcd(e, phi) != 1) {
-printf("Invalid e. Enter a valid public key exponent: ");
-scanf("%lld", &e);
-}
-// Calculate the private key d such that (d * e) % phi = 1
-d = modInverse(e, phi);
-// Enter the message
-printf("Enter the message to encrypt (as an integer): ");
-scanf("%lld", &message);
-// Encrypt the message
-encryptedMessage = power(message, e, n);
-printf("Encrypted message: %lld\n", encryptedMessage);
-// Decrypt the message
-decryptedMessage = power(encryptedMessage, d, n);
-printf("Decrypted message: %lld\n", decryptedMessage);
-return 0;
-}
+```
+
 
 ## OUTPUT:
 ![Crypto-9 1](https://github.com/user-attachments/assets/1147b2a3-a3f3-402c-ab78-7339e0bc184e)
