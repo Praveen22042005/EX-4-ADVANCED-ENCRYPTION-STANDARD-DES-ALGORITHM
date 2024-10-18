@@ -1,5 +1,5 @@
-Praveen BV
-212222100036
+## EX - 8 
+
 
 ## Aim:
 To implement the AES (Advanced Encryption Standard) encryption and decryption algorithm using a C programming language, demonstrating how to encrypt and decrypt a block of plaintext using a predefined AES key in 128-bit mode.
