@@ -1,91 +1,109 @@
-# EX-7-DATA-ENCRYPTION-STANDARD-DES-ALGORITHM
+## RSA Encryption Algorithm
 
 ## Aim:
-  To use Data Encryption Standard (DES) Algorithm for a practical application like URL Encryption.
-## ALGORITHM: 
-  1. DES (Data Encryption Standard) is a symmetric-key algorithm for the encryption of data. 
-  2. DES operates on a Feistel network, which breaks the encryption process into 16 rounds.
-  3. The block size of DES is fixed at 64 bits (8 bytes), and it uses a key size of 56 bits (7 bytes). However, keys are often provided as 64-bit keys where 8 bits are used for parity.
-  4. DES processes blocks of data using permutations and substitutions (S-boxes) over several rounds to generate the ciphertext from plaintext.
 
-## PROGRAM: 
-```
+The aim of the RSA Encryption Algorithm is to securely transmit information over an insecure network by using a public key for encryption and a private key for decryption. RSA, one of the first public-key cryptosystems, is widely used for secure data transmission, digital signatures, and secure key exchanges.
+
+## Algorithm
+
+ Step 1: Choose two distinct large prime numbers ppp and qqq.
+ Step 2: Compute n=p×qn = p \times qn=p×q. nnn will be used as part of the public and private keys.
+ Step 3: Calculate ϕ(n)=(p−1)×(q−1)\phi(n) = (p-1) \times (q-1)ϕ(n)=(p−1)×(q−1), where ϕ\phiϕ is Euler's Totient function.
+ Step 4: Choose an integer eee such that 1<e<ϕ(n)1 < e < \phi(n)1<e<ϕ(n) and gcd⁡(e,ϕ(n))=1\gcd(e, \phi(n)) = 1gcd(e,ϕ(n))=1. eee is the public exponent.
+ Step 5: Compute ddd as the modular multiplicative inverse of emod ϕ(n)e \mod \phi(n)emodϕ(n), such that e×d≡1mod ϕ(n)e \times d \equiv 1 \mod \phi(n)e×d≡1modϕ(n). ddd is the private exponent.
+ Step 6: The public key is (e,n)(e, n)(e,n), and the private key is (d,n)(d, n)(d,n).
+
+## Encryption
+
+ Step 1: To encrypt a message MMM, convert it into an integer mmm, where m<nm < nm<n.
+ Step 2: Compute the ciphertext C=memod nC = m^e \mod nC=memodn.
+ Step 3: The encrypted message is CCC.
+
+## Decryption:
+
+ Step 1: To decrypt the ciphertext CCC, use the private key ddd.
+ Step 2: Compute m=Cdmod nm = C^d \mod nm=Cdmodn, which gives the original message mmm.
+ Step 3: Convert mmm back to the original message MMM.
+
+## PROGRAM:
+
 #include <stdio.h>
-#include <stdint.h>
-#include <string.h>
-
-typedef uint64_t DES_Block;
-
-DES_Block initial_permutation(DES_Block block) {
-    return block;
+#include <math.h>
+long long gcd(long long a, long long b) {
+while (b != 0) {
+long long temp = b;
+b = a % b;
+a = temp;
 }
-
-DES_Block final_permutation(DES_Block block) {
-    return block;
+return a;
 }
-
-DES_Block feistel_function(DES_Block right_half, DES_Block subkey) {
-    return right_half ^ subkey;
+long long modInverse(long long a, long long m) {
+a = a % m;
+for (long long x = 1; x < m; x++) {
+if ((a * x) % m == 1) {
+return x;
 }
-
-DES_Block des_encrypt(DES_Block plaintext, DES_Block key) {
-    DES_Block permuted_block = initial_permutation(plaintext);
-    DES_Block left = permuted_block >> 32;
-    DES_Block right = permuted_block & 0xFFFFFFFF;
-
-    for (int round = 0; round < 16; round++) {
-        DES_Block temp = right;
-        right = left ^ feistel_function(right, key);
-        left = temp;
-    }
-
-    DES_Block pre_output = (right << 32) | left;
-    DES_Block ciphertext = final_permutation(pre_output);
-
-    return ciphertext;
 }
-
-DES_Block des_decrypt(DES_Block ciphertext, DES_Block key) {
-    return des_encrypt(ciphertext, key);
+return 1;
 }
-
-void process_url_encryption(const char* url, DES_Block key) {
-    size_t len = strlen(url);
-    size_t blocks = len / 8;
-    if (len % 8 != 0) blocks++;
-
-    for (size_t i = 0; i < blocks; i++) {
-        DES_Block plaintext = 0;
-        char chunk[9] = {0};  
-
-        strncpy(chunk, url + i * 8, 8);  
-        memcpy(&plaintext, chunk, sizeof(chunk));  
-
-        DES_Block ciphertext = des_encrypt(plaintext, key);
-        printf("Block %zu Encrypted: %lX\n", i, ciphertext);
-
-        DES_Block decrypted = des_decrypt(ciphertext, key);
-        printf("Block %zu Decrypted: %s\n", i, (char*)&decrypted);
-    }
+long long power(long long base, long long exp, long long mod) {
+long long result = 1;
+base = base % mod;
+while (exp > 0) {
+if (exp % 2 == 1) {
+result = (result * base) % mod;
 }
-
+exp = exp >> 1;
+base = (base * base) % mod;
+}
+return result;
+}
+int isPrime(long long n) {
+if (n <= 1) return 0;
+for (long long i = 2; i <= sqrt(n); i++) {
+if (n % i == 0) return 0;
+}
+return 1;
+}
 int main() {
-    printf("Ex-7 - Implement DES Encryption and Decryption\n");
-    const char* url = "https://tharun.com"; 
-    DES_Block key = 0x133457799BBCDFF1;
-
-    printf("Encrypting URL: %s\n", url);
-    process_url_encryption(url, key);
-
-    return 0;
+long long p, q, n, phi, e, d, message, encryptedMessage, decryptedMessage;
+// Choose two prime numbers
+printf("Enter prime number p: ");
+scanf("%lld", &p);
+while (!isPrime(p)) {
+printf("p is not a prime number. Enter a prime number: ");
+scanf("%lld", &p);
 }
-```
-## OUTPUT:
-
-![Screenshot 2024-10-16 144918](https://github.com/user-attachments/assets/d571beaa-da74-41ea-80a9-ae551f3d6e71)
-
-
-
-
-## RESULT: 
-Thus Data Encryption Standard (DES) Algorithm for a practical application like URL Encryption has been successfully excecuted.
+printf("Enter prime number q: ");
+scanf("%lld", &q);
+while (!isPrime(q)) {
+printf("q is not a prime number. Enter a prime number: ");
+scanf("%lld", &q);
+}
+// Calculate n = p * q
+n = p * q;
+// Calculate phi(n) = (p-1)*(q-1)
+phi = (p - 1) * (q - 1);
+// Choose e such that 1 < e < phi(n) and gcd(e, phi(n)) = 1
+printf("Enter public key exponent e (1 < e < %lld and gcd(e, %lld) = 1): ", phi, phi);
+scanf("%lld", &e);
+while (gcd(e, phi) != 1) {
+printf("Invalid e. Enter a valid public key exponent: ");
+scanf("%lld", &e);
+}
+// Calculate the private key d such that (d * e) % phi = 1
+d = modInverse(e, phi);
+// Enter the message
+printf("Enter the message to encrypt (as an integer): ");
+scanf("%lld", &message);
+// Encrypt the message
+encryptedMessage = power(message, e, n);
+printf("Encrypted message: %lld\n", encryptedMessage);
+// Decrypt the message
+decryptedMessage = power(encryptedMessage, d, n);
+printf("Decrypted message: %lld\n", decryptedMessage);
+return 0;
+}
+OUTPUT:
+RESULT:
+Thus the program to execute RSA Algorithm is executed successfully.
